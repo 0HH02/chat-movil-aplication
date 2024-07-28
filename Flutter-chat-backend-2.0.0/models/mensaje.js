@@ -22,7 +22,19 @@ const Mensaje = sequelize.define('mensaje', {
     mensaje: {
         type: DataTypes.STRING,
         allowNull: false
-    }
+    }, 
+    mid: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    isAudio: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+    audioData: {
+        type: DataTypes.BLOB,
+        allowNull: true,
+    },
 }, {
     timestamps: true,
     toJSON: {

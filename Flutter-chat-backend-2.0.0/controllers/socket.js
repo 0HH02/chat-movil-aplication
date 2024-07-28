@@ -29,8 +29,38 @@ const grabarMensaje = async (payload) => {
     }
 }
 
+const borrarMensaje = async (mensajeId) => {
+    try {
+        const result = await Mensaje.destroy({where:{mid: mensajeId}});
+        return !!(result);
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+const obtenerMensajesPendientes = async (userId) => {
+    try {
+        const mensajes = await Mensaje.findAll({
+            where: {
+                para: userId
+            }
+        });
+        return mensajes;
+    } catch (error) {
+        console.error('Error al obtener mensajes pendientes:', error);
+        return [];
+    }
+};
+
+
+
+
+
 module.exports = {
     usuarioConectado,
     usuarioDesconectado,
-    grabarMensaje
+    grabarMensaje,
+    borrarMensaje,
+    obtenerMensajesPendientes
 };

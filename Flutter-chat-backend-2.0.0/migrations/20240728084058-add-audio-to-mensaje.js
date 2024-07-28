@@ -3,40 +3,6 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('usuarios', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      nombre: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      online: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-    });
-
     await queryInterface.createTable('mensajes', {
       id: {
         allowNull: false,
@@ -72,11 +38,22 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
+      mid: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      isAudio: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+      },
+      audioData: {
+        allowNull: true,
+        type: Sequelize.BLOB,
+      }
     });
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('mensajes');
-    await queryInterface.dropTable('usuarios');
   },
 };

@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/config');
 const Usuario = require('./usuario');
 
-const Mensaje = sequelize.define('mensaje', {
+const LikeMessage = sequelize.define('likeMessage', {
     de: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -19,34 +19,18 @@ const Mensaje = sequelize.define('mensaje', {
             key: 'id'
         }
     },
-    mensaje: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }, 
     mid: {
         type: DataTypes.STRING,
         allowNull: false,
-        primaryKey: true
-    },
-    rid: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    mediaType: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }, 
-    multimedia: {
-        type: DataTypes.BLOB,
-        allowNull: true,
-    },
-    date: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        
     },
 }, {
-    timestamps: false
+    timestamps: true,
+    toJSON: {
+        transform: (doc, ret) => {
+            const { id, ...rest } = ret;
+            return rest;
+        }
+    }
 });
 
-module.exports = Mensaje;
+module.exports = LikeMessage;

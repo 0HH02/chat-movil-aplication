@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/services/auth_service.dart';
 
-import 'package:chat/pages/login_page.dart';
-import 'package:chat/pages/usuarios_page.dart';
+import 'package:chat/pages/auth/login_page.dart';
+import 'package:chat/pages/chat/usuarios_page.dart';
 
 class LoadingPage extends StatelessWidget {
   @override
@@ -27,7 +27,7 @@ class LoadingPage extends StatelessWidget {
     final socketService = Provider.of<SocketService>(context, listen: false);
 
     final autenticado = await authService.isLoggedIn();
-
+    print("autenticado: " + autenticado.toString());
     if (autenticado) {
       socketService.connect();
       Navigator.pushReplacement(

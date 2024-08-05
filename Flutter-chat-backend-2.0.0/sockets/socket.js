@@ -1,6 +1,6 @@
 const { io } = require('../index');
 const { comprobarJWT } = require('../helpers/jwt');
-const { usuarioConectado, usuarioDesconectado, grabarMensaje, borrarMensaje, obtenerMensajesPendientes } = require('../controllers/socket');
+const { usuarioConectado, usuarioDesconectado, grabarMensaje, borrarMensaje, obtenerMensajesPendientes, seenMessage, obtenerVistosPendientes, borrarVisto } = require('../controllers/socket');
 
 // Mensajes de Sockets
 io.on('connection', async (client) =>  {
@@ -23,26 +23,46 @@ io.on('connection', async (client) =>  {
             para: mensaje.para,
             mensaje: mensaje.mensaje,
             mid: mensaje.mid,
-            isAudio: mensaje.isAudio,
-            audioData: mensaje.audioData,
+            rid: mensaje.rid,
+            mediaType: mensaje.mediaType,
+            multimedia: mensaje.multimedia,
+            date: mensaje.date
         });
         console.log('emited: ', mensaje.mensaje)
+    });
+    const vistosPendientes = await obtenerVistosPendientes(uid);
+    vistosPendientes.forEach(mensaje => {
+        io.to( Number(mensaje.para) ).emit('confirmar-visto', {
+            de: mensaje.de,
+            para: mensaje.para,
+            mid: mensaje.mid,
+        });
+        console.log('emited: ', mensaje.mid)
     });
 
 
     // Escuchar del cliente el mensaje-personal
     client.on('mensaje-personal', async( payload ) => {
-        // TODO: Grabar mensaje
         console.log('Mensaje recibido:', payload);
         await grabarMensaje( payload );
         io.to( Number(payload.para) ).emit('mensaje-personal', payload );
     })
 
-    client.on('confirmar-recepcion', async({ mensajeId, para }) => {
-        console.log(`Confirmación de recepción del mensaje ${mensajeId} por el usuario ${para}`);
+    client.on('confirmar-recepcion', async(payload) => {
+        console.log(`Confirmación de recepción del mensaje ${payload['mid']} por el usuario ${payload['para']}`);
         // Borrar el mensaje de la base de datos
-        await borrarMensaje(mensajeId);
+        await seenMessage(payload)
+        io.to( Number(payload.
+            de
+        ) ).emit('confirmar-visto', payload );
+        await borrarMensaje(payload['mid']);
     });
+
+    client.on('confirmar-visto', async(payload) => {
+        console.log(`Confirmación de recepción del visto ${payload['mid']} por el usuario ${payload['para']}`);
+        await borrarVisto(payload['mid']);
+
+    })
 
     client.on('disconnect', () => {
         usuarioDesconectado(uid);

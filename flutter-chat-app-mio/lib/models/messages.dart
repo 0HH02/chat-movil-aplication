@@ -29,28 +29,51 @@ class PrivateMessages {
   final String to;
 
   @HiveField(2)
-  final String messages;
+  String messages;
 
   @HiveField(3)
   final String id;
 
   @HiveField(4)
-  final bool isAudio;
+  final String reference;
 
   @HiveField(5)
-  final List<int>? audioData; // Campo para almacenar los bytes del audio
+  String? multimedia;
 
-  PrivateMessages({
-    required this.from,
-    required this.to,
-    required this.messages,
-    this.audioData,
-    String? id,
-  })  : id = id ?? Uuid().v4(),
-        isAudio = audioData != null;
+  @HiveField(6)
+  String mediaType;
+
+  @HiveField(7)
+  bool liked;
+
+  @HiveField(8)
+  bool seen;
+
+  @HiveField(9)
+  String date;
+
+  PrivateMessages(
+      {required this.from,
+      required this.to,
+      String? messages,
+      String? id,
+      String? reference,
+      String? multimedia,
+      String? mediaType,
+      bool? liked,
+      bool? seen,
+      String? date})
+      : messages = messages ?? '',
+        id = id ?? Uuid().v4(),
+        reference = reference ?? '',
+        multimedia = multimedia ?? '',
+        mediaType = mediaType ?? 'text',
+        liked = liked ?? false,
+        seen = seen ?? false,
+        date = DateTime.now().toString();
 
   @override
   String toString() {
-    return 'id: $id from: $from to: $to say: $messages';
+    return 'id: $id from: $from to: $to say: $messages, multimedia: $multimedia, mediaType: $mediaType, liked: $liked, seen: $seen, date: $date';
   }
 }

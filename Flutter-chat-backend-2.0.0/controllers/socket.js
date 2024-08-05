@@ -1,5 +1,6 @@
 const Usuario = require('../models/usuario');
 const Mensaje = require('../models/mensaje');
+const Seen = require('../models/visto');
 
 const usuarioConectado = async (uid = '') => {
     const usuario = await Usuario.findByPk(uid);
@@ -39,6 +40,26 @@ const borrarMensaje = async (mensajeId) => {
     }
 }
 
+const borrarVisto = async (mensajeId) => {
+    try {
+        const result = await Seen.destroy({where:{mid: mensajeId}});
+        return !!(result);
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
+const seenMessage = async (payload) => {
+    try {
+        await Seen.create(payload);
+        return true;
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
 const obtenerMensajesPendientes = async (userId) => {
     try {
         const mensajes = await Mensaje.findAll({
@@ -53,6 +74,20 @@ const obtenerMensajesPendientes = async (userId) => {
     }
 };
 
+const obtenerVistosPendientes = async (userId) => {
+    try {
+        const seen = await Seen.findAll({
+            where: {
+                para: userId
+            }
+        });
+        return seen;
+    } catch (error) {
+        console.error('Error al obtener seen pendientes:', error);
+        return [];
+    }
+};
+
 
 
 
@@ -62,5 +97,8 @@ module.exports = {
     usuarioDesconectado,
     grabarMensaje,
     borrarMensaje,
-    obtenerMensajesPendientes
+    obtenerMensajesPendientes, 
+    seenMessage,
+    obtenerVistosPendientes,
+    borrarVisto
 };

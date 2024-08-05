@@ -1,4 +1,5 @@
 import 'package:chat/services/audio_service.dart';
+import 'package:chat/services/message_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SocketService()),
         ChangeNotifierProvider(create: (_) => ChatService()),
         ChangeNotifierProvider(create: (_) => AudioService()),
+        ChangeNotifierProvider(create: (_) => MessageService()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,40 +1,41 @@
 // To parse this JSON data, do
 //
-//     final usuario = usuarioFromJson(jsonString);
+//     final posiblesLigues = posiblesLiguesFromJson(jsonString);
 
 import 'dart:convert';
 
 import 'package:chat/models/messages.dart';
 
-Usuario usuarioFromJson(String str) => Usuario.fromJson(json.decode(str));
+PosiblesLigues posiblesLiguesFromJson(String str) =>
+    PosiblesLigues.fromJson(json.decode(str));
 
-String usuarioToJson(Usuario data) => json.encode(data.toJson());
+String posiblesLiguesToJson(PosiblesLigues data) => json.encode(data.toJson());
 
-class Usuario {
-  Usuario({
+class PosiblesLigues {
+  PosiblesLigues({
     required this.online,
     required this.nombre,
-    required this.email,
     required this.uid,
+    required this.photo,
   });
 
   bool online;
   String nombre;
-  String email;
+  String photo;
   String uid;
   PrivateMessages? last_message;
 
-  factory Usuario.fromJson(Map<String, dynamic> json) => Usuario(
+  factory PosiblesLigues.fromJson(Map<String, dynamic> json) => PosiblesLigues(
         online: json["online"],
         nombre: json["nombre"],
-        email: json["email"],
+        photo: json["photo"],
         uid: json["id"].toString(),
       );
 
   Map<String, dynamic> toJson() => {
         "online": online,
         "nombre": nombre,
-        "email": email,
+        "photo": photo,
         "uid": uid,
       };
 }

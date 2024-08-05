@@ -42,11 +42,15 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      isAudio: {
+      rid: {
         allowNull: false,
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.STRING,
       },
-      audioData: {
+      mediaType: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      multimedia: {
         allowNull: true,
         type: Sequelize.BLOB,
       }

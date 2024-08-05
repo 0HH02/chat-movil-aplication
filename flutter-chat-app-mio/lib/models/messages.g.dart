@@ -56,16 +56,21 @@ class PrivateMessagesAdapter extends TypeAdapter<PrivateMessages> {
     return PrivateMessages(
       from: fields[0] as String,
       to: fields[1] as String,
-      messages: fields[2] as String,
-      audioData: (fields[5] as List?)?.cast<int>(),
+      messages: fields[2] as String?,
       id: fields[3] as String?,
+      reference: fields[4] as String?,
+      multimedia: fields[5] as String?,
+      mediaType: fields[6] as String?,
+      liked: fields[7] as bool?,
+      seen: fields[8] as bool?,
+      date: fields[9] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, PrivateMessages obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.from)
       ..writeByte(1)
@@ -75,9 +80,17 @@ class PrivateMessagesAdapter extends TypeAdapter<PrivateMessages> {
       ..writeByte(3)
       ..write(obj.id)
       ..writeByte(4)
-      ..write(obj.isAudio)
+      ..write(obj.reference)
       ..writeByte(5)
-      ..write(obj.audioData);
+      ..write(obj.multimedia)
+      ..writeByte(6)
+      ..write(obj.mediaType)
+      ..writeByte(7)
+      ..write(obj.liked)
+      ..writeByte(8)
+      ..write(obj.seen)
+      ..writeByte(9)
+      ..write(obj.date);
   }
 
   @override

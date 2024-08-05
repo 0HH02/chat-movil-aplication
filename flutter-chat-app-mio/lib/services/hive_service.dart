@@ -57,7 +57,21 @@ class HiveService {
     if (chats.isNotEmpty) {
       return chats.first.messages.reversed.toList();
     }
+    print("None was found");
     return [];
+  }
+
+  void updateMessage(String messageID) {
+    var box = _messagesBox!;
+    var chats = box.values.where(
+        (chat) => chat.messages.any((message) => message.id == messageID));
+    if (chats.isNotEmpty) {
+      var chat = chats.first;
+      var message =
+          chat.messages.firstWhere((message) => message.id == messageID);
+      message.seen = true;
+      chat.save();
+    }
   }
 
   PrivateMessages getLastMessagesForUser(String userId) {

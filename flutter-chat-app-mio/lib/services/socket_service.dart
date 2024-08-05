@@ -1,4 +1,5 @@
 import 'package:chat/global/environment.dart';
+import 'package:chat/helpers/aux_functions.dart';
 import 'package:chat/models/messages.dart';
 import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/hive_service.dart';
@@ -48,20 +49,54 @@ class SocketService with ChangeNotifier {
         notifyListeners();
       });
 
-      this._socket.on('mensaje-personal', (payload) {
-        print('Mensaje recibido: $payload');
-        var currentId = HiveService().currentId;
-        print('currentId: $currentId');
-        PrivateMessages storage_message = PrivateMessages(
-          from: payload['de'].toString(),
-          to: currentId,
-          messages: payload['mensaje'],
-          id: payload['mid'],
-          audioData: payload['audioData'],
-        );
-        HiveService().addMessage(storage_message, currentId);
-        this.emit('confirmar-recepcion',
-            {'mensajeId': payload['mid'], 'para': currentId});
+      this._socket.on('mensaje-personal', (payload) async {
+        try {
+          print('Mensaje recibido: $payload');
+          var currentId = HiveService().currentId;
+          final mediaType = payload['mediaType'];
+          final multimedia = payload['multimedia'];
+          String filePath = '';
+          if (multimedia.isNotEmpty) {
+            filePath = await saveFile(mediaType, multimedia);
+            print('File saved at: $filePath');
+            // Usa filePath como necesites en tu aplicación
+            print(payload['mid']);
+          }
+          PrivateMessages storage_message = PrivateMessages(
+            from: payload['de'].toString(),
+            to: currentId,
+            messages: payload['mensaje'],
+            id: payload['mid'],
+            multimedia: filePath,
+            mediaType: payload['mediaType'],
+            reference: payload['reference'],
+            date: payload['date'],
+          );
+          try {
+            await HiveService().addMessage(storage_message, currentId);
+          } catch (e) {
+            print('Error al guardar mensaje en Hive: $e');
+          }
+          this.emit('confirmar-recepcion', {
+            'mid': payload['mid'],
+            'para': currentId,
+            'de': payload['de'].toString()
+          });
+          notifyListeners();
+        } catch (e) {
+          print('Error saving file: $e');
+        }
+      });
+
+      this._socket.on('confirmar-visto', (payload) async {
+        print('visto recibido: $payload');
+        HiveService().updateMessage(payload['mid']);
+
+        this.emit('confirmar-visto', {
+          'mid': payload['mid'],
+          'para': payload['para'].toString(),
+          'de': payload['de'].toString()
+        });
         notifyListeners();
       });
 

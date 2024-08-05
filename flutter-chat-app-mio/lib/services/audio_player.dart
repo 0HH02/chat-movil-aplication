@@ -12,7 +12,12 @@ class AudioPlayer {
 
   Future<void> startRecording() async {
     if (await Permission.microphone.request().isGranted) {
-      await _recorder.startRecorder(toFile: 'audio.aac', codec: Codec.aacADTS);
+      //unique Name
+      String path = DateTime.now().millisecondsSinceEpoch.toString() + '.aac';
+      await _recorder.startRecorder(
+        toFile: path,
+        codec: Codec.aacADTS,
+      );
     }
   }
 

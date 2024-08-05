@@ -1,0 +1,14 @@
+CHAT:
+- Implementar mensajes de referencia.
+- Arreglar la cámara.
+- Implementar fecha en los mensajes.
+- Implementar me gusta en los mensajes.
+- Implementar vista cómoda de varios archivos multimedia.
+- Copiar mensaje
+- Eliminar mensaje
+- Ver mensaje referenciado
+- Opción de descargar multimedia
+- Implementar enlaces en el chat
+
+- Arreglar hora
+
